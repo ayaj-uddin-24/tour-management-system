@@ -3,6 +3,7 @@ import { Server } from "http";
 import app from "./app";
 import mongoose from "mongoose";
 import { envVariables } from "./app/config/env";
+import { seedSuperAdmin } from "./app/utils/seedSuperAdmin";
 
 let server: Server;
 
@@ -19,7 +20,10 @@ const connectServer = async () => {
   }
 };
 
-connectServer();
+(async () => {
+  await connectServer();
+  await seedSuperAdmin();
+})();
 
 // Unhandled Rejection Error
 process.on("unhandledRejection", (err) => {
@@ -36,7 +40,7 @@ process.on("unhandledRejection", (err) => {
 
 // Uncaught Rejection Error
 process.on("uncaughtException", (err) => {
-  console.log("Uncaught Exeption Error! Server Shutting Down!!!", err);
+  console.log("Uncaught Exception Error! Server Shutting Down!!!", err);
 
   if (server) {
     server.close(() => {
@@ -47,7 +51,7 @@ process.on("uncaughtException", (err) => {
   process.exit(1);
 });
 
-// Signal Terminat Error
+// Signal Terminate Error
 process.on("SIGTERM", () => {
   console.log("SIGTERM Signal Received! Server Shutting Down!!!");
 

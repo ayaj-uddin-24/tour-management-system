@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from "express";
 import { envVariables } from "../config/env";
-import ApiError from "../error/ApiError";
+import AppError from "../error/AppError";
 
 export const globalErrorHandler = (
   err: any,
@@ -13,7 +13,7 @@ export const globalErrorHandler = (
   let statusCode = 500;
   let message = "Something went wrong!";
 
-  if (err instanceof ApiError) {
+  if (err instanceof AppError) {
     statusCode = err.statusCode;
     message = err.message;
   } else if (err instanceof Error) {

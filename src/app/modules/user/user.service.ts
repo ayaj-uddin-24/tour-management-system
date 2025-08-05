@@ -46,8 +46,6 @@ const updateUser = async (
     throw new AppError(httpStatus.NOT_FOUND, "User doesn't exist!");
   }
 
-  console.log(decodedToken);
-
   if (payload.role) {
     if (decodedToken.role === Role.USER || decodedToken.role === Role.GUIDE) {
       throw new AppError(httpStatus.FORBIDDEN, "You are not authorized!");

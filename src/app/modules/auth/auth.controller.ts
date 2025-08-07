@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from "express";
 import { catchAsync } from "../../utils/catchAsync";
@@ -9,22 +10,39 @@ import AppError from "../../error/AppError";
 import { createUserTokens } from "../../utils/userTokens";
 import { setAuthCookie } from "../../utils/setCookie";
 import { envVariables } from "../../config/env";
+import passport from "passport";
 
+// User Login
 const credentialsLogin = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const user = await authServices.credentialsLogin(req.body);
+    passport.authenticate("local", async (err: any, user: any, info: any) => {
+      if (err) {
+        return next(new AppError(400, err));
+      }
 
-    setAuthCookie(res, user);
+      if (!user) {
+        return next(new AppError(401, info.message));
+      }
 
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: "Login successful",
-      data: user,
-    });
+      const userTokens = createUserTokens(user);
+
+      const { password, ...rest } = user.toObject();
+
+      sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "Login Successful",
+        data: {
+          accessToken: userTokens.accessToken,
+          refershToken: userTokens.refreshToken,
+          user: rest,
+        },
+      });
+    })(req, res, next);
   }
 );
 
+// Get new access token
 const getNewAccessToken = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const refreshToken = req.cookies.refreshToken;
@@ -40,6 +58,7 @@ const getNewAccessToken = catchAsync(
   }
 );
 
+// User logout
 const logout = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     res.clearCookie("accessToken", {
@@ -63,6 +82,7 @@ const logout = catchAsync(
   }
 );
 
+// Reset the password
 const resetPassword = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const oldPassword = req.body.oldPassword;
@@ -84,6 +104,7 @@ const resetPassword = catchAsync(
   }
 );
 
+// Registration using google callback
 const googleCallBackController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     let redirectTo = req.query.state ? (req.query.state as string) : "";

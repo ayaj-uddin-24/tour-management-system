@@ -15,7 +15,10 @@ export const checkAuth =
         throw new AppError(httpsStatus.FORBIDDEN, "Unauthorized Access!");
       }
 
-      const verifiedToken = verifyToken(accessToken, envVariables.JWT_ACCESS_SECRET) as JwtPayload;
+      const verifiedToken = verifyToken(
+        accessToken,
+        envVariables.JWT_ACCESS_SECRET
+      ) as JwtPayload;
 
       if (!authRoles.includes(verifiedToken.role)) {
         throw new AppError(404, "You are not allowed to view this page");

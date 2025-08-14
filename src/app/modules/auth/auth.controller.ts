@@ -34,7 +34,7 @@ const credentialsLogin = catchAsync(
         message: "Login Successful",
         data: {
           accessToken: userTokens.accessToken,
-          refershToken: userTokens.refreshToken,
+          refreshToken: userTokens.refreshToken,
           user: rest,
         },
       });
@@ -98,7 +98,7 @@ const resetPassword = catchAsync(
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: "Password reset successfuly",
+      message: "Password reset successfully",
       data: null,
     });
   }

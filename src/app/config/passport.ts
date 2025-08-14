@@ -89,7 +89,7 @@ passport.use(
           });
         }
 
-        return done(null, user, { message: "User created successfuly" });
+        return done(null, user, { message: "User created successfully" });
       } catch (error) {
         return done(error);
       }

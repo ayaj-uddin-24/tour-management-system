@@ -39,7 +39,7 @@ export const globalErrorHandler = (
     message = simplifiedError.message;
     errorSources = simplifiedError.errorSources as IErrorResources[];
   }
-  // Cast Erro
+  // Cast Error
   else if (err.name === "CastError") {
     const simplifiedError = castError();
     statusCode = simplifiedError.statusCode;

@@ -32,10 +32,8 @@ app.get("/", (req: Request, res: Response) => {
   res.send("I'm home route");
 });
 
-// Global Error Handler
+// Error handler
 app.use(globalErrorHandler);
-
-// Not Found Error
 app.use(notFound);
 
 export default app;

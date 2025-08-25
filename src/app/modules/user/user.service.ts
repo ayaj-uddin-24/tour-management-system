@@ -81,4 +81,11 @@ const getAllUsers = async () => {
   };
 };
 
-export const userServices = { createUser, getAllUsers, updateUser };
+// Get me
+const getMe = async (userId: string) => {
+  const user = await User.findById(userId).select("name email picture");
+
+  return user;
+};
+
+export const userServices = { createUser, getAllUsers, updateUser, getMe };

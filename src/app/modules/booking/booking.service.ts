@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import AppError from "../../error/AppError";
 import { PAYMENT_STATUS } from "../payment/payment.interface";
 import { Payment } from "../payment/payment.model";
@@ -103,7 +104,7 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
     transactionId,
   });
 
-  const updatedBooking = await Booking.findByIdAndUpdate(
+  const updatedBookingDoc = await Booking.findByIdAndUpdate(
     booking._id,
     {
       payment: payment._id,
@@ -114,10 +115,10 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
     .populate("tour", "title images location costFrom")
     .populate("payment", "transactionId amount");
 
-  const userName = updateBooking?.user?.name;
-  const email = updateBooking?.user?.email;
-  const address = updateBooking?.user?.address;
-  const phoneNumber = updateBooking?.user?.phone;
+  const userName = (updatedBookingDoc?.user as any).name;
+  const email = (updatedBookingDoc?.user as any).email;
+  const address = (updatedBookingDoc?.user as any).address;
+  const phoneNumber = (updatedBookingDoc?.user as any).phone;
 
   const sslPayload: ISSLCommerz = {
     name: userName,
@@ -131,17 +132,25 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
   const sslCommerz = await sslService.sslPaymentInit(sslPayload);
 
   return {
-    data: updatedBooking,
+    data: updatedBookingDoc,
     sslCommerz: sslCommerz.GatewayPageURL,
   };
 };
 
 const getAllBookings = async () => {
-  return {};
+  const bookings = await Booking.find();
+
+  return {
+    data: bookings,
+  };
 };
 
-const getSingleBooking = async () => {
-  return {};
+const getSingleBooking = async (bookingId: string) => {
+  const booking = await Booking.findById(bookingId);
+
+  return {
+    data: booking,
+  };
 };
 
 const getUserBookings = async () => {

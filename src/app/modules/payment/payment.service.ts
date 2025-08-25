@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import AppError from "../../error/AppError";
 import { BOOKING_STATUS } from "../booking/booking.interface";
 import { Booking } from "../booking/booking.model";
@@ -19,10 +20,10 @@ const initPayment = async (bookingId: string) => {
 
   const booking = await Booking.findById(payment.booking);
 
-  const userName = booking?.user?.name;
-  const email = booking?.user?.email;
-  const address = booking?.user?.address;
-  const phoneNumber = booking?.user?.phone;
+  const userName = (booking?.user as any).name;
+  const email = (booking?.user as any).email;
+  const address = (booking?.user as any).address;
+  const phoneNumber = (booking?.user as any).phone;
 
   const sslPayload: ISSLCommerz = {
     name: userName,
@@ -73,7 +74,7 @@ const failPayment = async (query: Record<string, string>) => {
   );
 
   return {
-    success: true,
+    success: false,
     message: "Payment Failed!",
   };
 };
@@ -92,7 +93,7 @@ const cancelPayment = async (query: Record<string, string>) => {
   );
 
   return {
-    success: true,
+    success: false,
     message: "Payment Canceled!",
   };
 };

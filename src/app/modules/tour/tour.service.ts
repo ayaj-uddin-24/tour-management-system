@@ -6,7 +6,6 @@ import { QueryBuilder } from "../../utils/QueryBuilder";
 import { tourSearchableFields } from "../../constants";
 
 /* ------------------ TOUR TYPE SERVICE ------------------ */
-
 const createTourType = async (payload: Partial<ITourType>) => {
   const existingTourType = await TourType.findOne({ name: payload.name });
 
@@ -63,7 +62,6 @@ const deleteTourType = async (id: string) => {
 };
 
 /* ------------------ TOUR CONTROLLER ------------------ */
-
 const createTour = async (payload: Partial<ITour>) => {
   const existingTour = await Tour.findOne({ title: payload.title });
 

@@ -7,8 +7,12 @@ import httpStatus from "http-status-codes";
 
 // Create division controller
 export const createDivision = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const division = await divisionService.createDivision(req.body);
+  async (req: Request, res: Response) => {
+    const payload = {
+      ...req.body,
+      thumbnail: req.file?.path,
+    };
+    const division = await divisionService.createDivision(payload);
 
     sendResponse(res, {
       statusCode: httpStatus.CREATED,
@@ -21,7 +25,7 @@ export const createDivision = catchAsync(
 
 // Get all divisions controller
 export const getAllDivisions = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response) => {
     const query = req.params;
     const division = await divisionService.getAllDivisions(
       query as Record<string, string>
@@ -39,7 +43,7 @@ export const getAllDivisions = catchAsync(
 
 // Get division by slug
 export const getSingleDivision = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response) => {
     const slug = req.params.slug;
     const division = await divisionService.getSingleDivision(slug);
 
@@ -54,7 +58,7 @@ export const getSingleDivision = catchAsync(
 
 // Update division
 export const updatedDivision = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response) => {
     const division = await divisionService.updateDivision(
       req.params.id,
       req.body
@@ -71,7 +75,7 @@ export const updatedDivision = catchAsync(
 
 // Delete division
 export const deleteDivision = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response) => {
     await divisionService.deleteDivision(req.params.id);
 
     sendResponse(res, {

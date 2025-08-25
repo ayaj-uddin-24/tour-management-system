@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createUser, getAllUsers, updateUser } from "./user.controller";
+import { createUser, getAllUsers, getMe, updateUser } from "./user.controller";
 import { validateRequest } from "../../middlewares/validateRequest";
 import { updateUserZodSchema } from "./user.validation";
 import { Role } from "./user.interface";
@@ -13,6 +13,7 @@ router.post(
   createUser
 );
 router.get("/get-users", checkAuth(Role.SUPER_ADMIN, Role.ADMIN), getAllUsers);
+router.get("/me", checkAuth(...Object.values(Role)), getMe);
 router.patch(
   "/:id",
   validateRequest(updateUserZodSchema),

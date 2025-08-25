@@ -7,20 +7,15 @@ const objectId = z.string().refine((val) => Types.ObjectId.isValid(val), {
 });
 
 /* ------------------ TOUR TYPE SCHEMAS ------------------ */
-
-// Create TourType
 export const createTourTypeSchema = z.object({
   name: z.string().min(1, "Name is required"),
 });
 
-// Update TourType
 export const updateTourTypeSchema = z.object({
   name: z.string().min(1, "Name is required").optional(),
 });
 
 /* ------------------ TOUR SCHEMAS ------------------ */
-
-// Create Tour
 export const createTourSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().optional(),
@@ -42,7 +37,6 @@ export const createTourSchema = z.object({
   deleteImages: z.array(z.string()).optional(),
 });
 
-// Update Tour
 export const updateTourSchema = z.object({
   title: z.string().min(1).optional(),
   slug: z.string().min(1).optional(),

@@ -4,10 +4,11 @@ import { catchAsync } from "../../utils/catchAsync";
 import { TourService } from "./tour.service";
 import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from "http-status-codes";
+import { ITour } from "./tour.interface";
 
 /* ------------------ TOUR TYPE CONTROLLER ------------------ */
 export const createTourType = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response) => {
     const tourType = await TourService.createTourType(req.body);
 
     sendResponse(res, {
@@ -20,7 +21,7 @@ export const createTourType = catchAsync(
 );
 
 export const getAllTourType = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response) => {
     const tourType = await TourService.getAllTourType();
 
     sendResponse(res, {
@@ -34,7 +35,7 @@ export const getAllTourType = catchAsync(
 );
 
 export const getSingleTourType = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response) => {
     const tourType = await TourService.getSingleTourType(req.params.id);
 
     sendResponse(res, {
@@ -47,7 +48,7 @@ export const getSingleTourType = catchAsync(
 );
 
 export const updateTourType = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response) => {
     const tourType = await TourService.updateTourType(req.params.id, req.body);
 
     sendResponse(res, {
@@ -60,7 +61,7 @@ export const updateTourType = catchAsync(
 );
 
 export const deleteTourType = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response) => {
     const tourType = await TourService.deleteTourType(req.params.id);
 
     sendResponse(res, {
@@ -73,69 +74,64 @@ export const deleteTourType = catchAsync(
 );
 
 /* ------------------ TOUR CONTROLLER ------------------ */
-export const createTour = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const tour = await TourService.createTour(req.body);
+export const createTour = catchAsync(async (req: Request, res: Response) => {
+  const payload: ITour = {
+    ...req.body,
+    images: (req.files as Express.Multer.File[]).map((file) => file.path),
+  };
 
-    sendResponse(res, {
-      statusCode: httpStatus.CREATED,
-      success: true,
-      message: "Tour created successfully",
-      data: tour,
-    });
-  }
-);
+  const tour = await TourService.createTour(payload);
 
-export const getAllTour = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const query = req.query;
-    const tour = await TourService.getAllTour(query as Record<string, string>);
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: "Tour created successfully",
+    data: tour,
+  });
+});
 
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: "All tour data retrieved successfully",
-      data: tour.data,
-      meta: tour.meta,
-    });
-  }
-);
+export const getAllTour = catchAsync(async (req: Request, res: Response) => {
+  const query = req.query;
+  const tour = await TourService.getAllTour(query as Record<string, string>);
 
-export const getSingleTour = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const tour = await TourService.getSingleTour(req.params.id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "All tour data retrieved successfully",
+    data: tour.data,
+    meta: tour.meta,
+  });
+});
 
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: "Tour data retrieved successfully",
-      data: tour,
-    });
-  }
-);
+export const getSingleTour = catchAsync(async (req: Request, res: Response) => {
+  const tour = await TourService.getSingleTour(req.params.id);
 
-export const updateTour = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const tour = await TourService.updateTour(req.params.id, req.body);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Tour data retrieved successfully",
+    data: tour,
+  });
+});
 
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: "Tour updated successfully",
-      data: tour,
-    });
-  }
-);
+export const updateTour = catchAsync(async (req: Request, res: Response) => {
+  const tour = await TourService.updateTour(req.params.id, req.body);
 
-export const deleteTour = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const tour = await TourService.deleteTour(req.params.id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Tour updated successfully",
+    data: tour,
+  });
+});
 
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: "Tour deleted successfully",
-      data: tour,
-    });
-  }
-);
+export const deleteTour = catchAsync(async (req: Request, res: Response) => {
+  const tour = await TourService.deleteTour(req.params.id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Tour deleted successfully",
+    data: tour,
+  });
+});

@@ -7,50 +7,56 @@ import { sendResponse } from "../../utils/sendResponse";
 import { JwtPayload } from "jsonwebtoken";
 
 // Create User Controller
-export const createUser = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const user = await userServices.createUser(req.body);
+export const createUser = catchAsync(async (req: Request, res: Response) => {
+  const user = await userServices.createUser(req.body);
 
-    sendResponse(res, {
-      statusCode: httpStatus.CREATED,
-      success: true,
-      message: "User Created Successfully",
-      data: user,
-    });
-  }
-);
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: "User Created Successfully",
+    data: user,
+  });
+});
 
 // Update User Controller
-export const updateUser = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const userId = req.params.id;
-    const verifiedToken = req.user;
-    const user = await userServices.updateUser(
-      userId,
-      req.body,
-      verifiedToken as JwtPayload
-    );
+export const updateUser = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.params.id;
+  const verifiedToken = req.user;
+  const user = await userServices.updateUser(
+    userId,
+    req.body,
+    verifiedToken as JwtPayload
+  );
 
-    sendResponse(res, {
-      statusCode: httpStatus.CREATED,
-      success: true,
-      message: "User Created Successfully",
-      data: user,
-    });
-  }
-);
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: "User Created Successfully",
+    data: user,
+  });
+});
 
 // Get All Users Controller
-export const getAllUsers = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const user = await userServices.getAllUsers();
+export const getAllUsers = catchAsync(async (req: Request, res: Response) => {
+  const user = await userServices.getAllUsers();
 
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: "Users Data Retrieved Successfully",
-      data: user.data,
-      meta: { total: user.totalUsers },
-    });
-  }
-);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Users Data Retrieved Successfully",
+    data: user.data,
+    meta: { total: user.totalUsers },
+  });
+});
+
+export const getMe = catchAsync(async (req: Request, res: Response) => {
+  const decodedToken = req.user as JwtPayload;
+  const user = await userServices.getMe(decodedToken.userId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User Profile Retrieved Successfully",
+    data: user,
+  });
+});

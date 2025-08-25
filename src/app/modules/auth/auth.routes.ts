@@ -14,6 +14,12 @@ router.post(
   checkAuth(...Object.values(Role)),
   authControllers.resetPassword
 );
+router.post(
+  "/set-password",
+  checkAuth(...Object.values(Role)),
+  authControllers.setPassword
+);
+router.post("/forgot-password", authControllers.forgotPassword);
 router.get(
   "/google",
   async (req: Request, res: Response, next: NextFunction) => {

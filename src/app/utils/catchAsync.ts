@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextFunction, Request, Response } from "express";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 type AsyncHandler = (
   req: Request,
   res: Response,
